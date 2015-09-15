@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 
-print ("Loading insteon_hub.py")
+#print ("Loading insteon_hub.py")
 
 import os, urllib, urllib2, json, pickle, logging, logging.handlers, pprint, re, sys, traceback, insteon_utils
 from secrets import API_Key, Client_Secret, Refresh_Token, account_name, account_password
@@ -10,12 +10,14 @@ from insteon_utils import token_request, refresh_bearer, general_get_request, ac
 	dev_search_id, room_listing, populate_scenes,scene_listing,scene_command, scene_off, scene_on, save_account, \
 	devices, pp, server
 
-def logger_dir():
+def logger_dir(logfilename):
 	candidates = { "/var/log" , "/usr/local/log" , "/tmp" , os.environ["HOME"] }
 	for logdir in candidates:
 		# W_OK is for writing, R_OK for reading, etc.
+		logfile = logdir + "/" + logfilename
 		if (os.access(logdir, os.W_OK)):
-			return logdir
+			return logfile
+	return logfilename 
 
 def create_logger():
     # create logger
@@ -23,7 +25,7 @@ def create_logger():
     logger.setLevel(logging.INFO)
 
     # create file handler which logs even debug messages
-    fh = logging.FileHandler(logger_dir() + '/insteon_hub.log', mode='a')
+    fh = logging.FileHandler(logger_dir("insteon_hub.log"), mode='a')
     fh.setLevel(logging.INFO)
 
     # create console handler with a higher log level
@@ -126,7 +128,7 @@ def process_request(devname,ON_OFF_STATUS):
 
 def main():
 	global logger
-	print ("insteon_hub.main()")
+	# print ("insteon_hub.main()")
 	logger = create_logger()
 
 	try:

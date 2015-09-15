@@ -10,13 +10,20 @@ from insteon_utils import token_request, refresh_bearer, general_get_request, ac
 	dev_search_id, room_listing, populate_scenes,scene_listing,scene_command, scene_off, scene_on, save_account, \
 	devices, pp, server
 
+def logger_dir():
+	candidates = { "/var/log" , "/usr/local/log" , "/tmp" , os.environ["HOME"] }
+	for logdir in candidates:
+		# W_OK is for writing, R_OK for reading, etc.
+		if (os.access(logdir, os.W_OK)):
+			return logdir
+
 def create_logger():
     # create logger
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
 
     # create file handler which logs even debug messages
-    fh = logging.FileHandler('/var/log/insteon_hub.log', mode='a')
+    fh = logging.FileHandler(logger_dir() + '/insteon_hub.log', mode='a')
     fh.setLevel(logging.INFO)
 
     # create console handler with a higher log level

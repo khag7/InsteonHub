@@ -2,7 +2,7 @@
 
 #print ("Loading insteon_hub.py")
 
-import os, urllib, urllib2, json, pickle, logging, logging.handlers, pprint, re, sys, traceback, insteon_utils
+import os, urllib, urllib2, json, pickle, logging, logging.handlers, pprint, re, sys, traceback, insteon_utils, device_categories
 from secrets import API_Key, Client_Secret, Refresh_Token, account_name, account_password
 from insteon_utils import token_request, refresh_bearer, general_get_request, account_list, \
 	get_house, get_houses, house_check, populate_houses, populate_all, populate_devices, \
@@ -140,14 +140,7 @@ def main():
 	        populate_all()
 	        save_account()
 	
-	try: 
-		with open('device_categories.json') as data_file:
-			data = json.load(data_file)
-			dev_categories = data['Device Category List']
-	except:
-		with open(os.environ["HOME"] + '/.insteon_hub/device_categories.json') as data_file:
-			data = json.load(data_file)
-			dev_categories = data['Device Category List']
+	dev_categories = device_categories.get_device_categories()
 	
 	if len(sys.argv) < 3:
 		print( sys.argv[0] + " [On/Off/Status] [device name 1] [device name 2] ...")

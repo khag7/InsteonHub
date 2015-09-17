@@ -145,7 +145,7 @@ def main():
 			data = json.load(data_file)
 			dev_categories = data['Device Category List']
 	except:
-		with open(os.environ["HOME"] + '/.insteon_hub/device_categories.json') as data_file:
+		with open(os.environ["HOME"] + '/.local/insteon-python/device_categories.json') as data_file:
 			data = json.load(data_file)
 			dev_categories = data['Device Category List']
 	

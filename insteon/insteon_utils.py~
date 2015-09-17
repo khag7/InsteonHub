@@ -2,7 +2,7 @@
 import os, urllib, urllib2, json, pickle, logging, pprint, re, sys, time, traceback
 from secrets import *
 
-account_filename = os.environ["HOME"]+ "/.insteon_hub/" + account_name + ".pickle"
+account_filename = os.environ["HOME"]+ "/.local/insteon-python/" + account_name + ".pickle"
 server = "https://connect.insteon.com"
 pp = pprint.PrettyPrinter(indent=21)
 

@@ -232,11 +232,24 @@ def device_command(device_id, command_string, data_list={}):
 	loop = True
 	while True:
 		try:
-			request = urllib2.Request(server + "/api/v2/commands", data = json.dumps(data_list), headers = headers)
+			urllib2.build_opener(urllib2.HTTPHandler(debuglevel=1))
+			logger.debug( json.dumps(data_list))
+			if "level" in data_list: 
+				request = urllib2.Request(server + "/api/v2/commands?device_id=" + str(data_list["device_id"]) + "&command=" + data_list["command"] + "&level=" + str(data_list["level"]), headers = headers)
+			else:
+				request = urllib2.Request(server + "/api/v2/commands", data = json.dumps(data_list), headers = headers)
+			logger.debug( request.get_full_url())
 			response = urllib2.urlopen(request)
 		except urllib2.HTTPError, e:
-			logger.error( e.code)
-			logger.error( e.read())
+			response = False
+			#logger.error( e.code)
+			#logger.error( e.reason)
+			error_info = e.read()
+			#logger.error( error_info)
+			logger.error( e.reason + ": " + error_info)
+			#logger.error( headers)
+			logger.error( request.get_full_url())
+			#logger.error( json.dumps(data_list))
 			if e.code == 403 or e.code == 401:
 				logger.debug(e.read())
 				refresh_bearer()
@@ -249,8 +262,12 @@ def device_command(device_id, command_string, data_list={}):
 		logger.debug(pp.pformat(content))
 		dict_return = json.loads(content)
 		command_id = dict_return["id"]
+	else:
+		#logger.error(response)
+		command_id = "???"
+		return "???"
 	count = 1
-	while count < 100:
+	while count < 10:
 		command_return = general_get_request("commands/" + str(command_id))
 		logger.debug("Try #" + str(count) + " " + pp.pformat(command_return))
 		status = command_return["status"]
